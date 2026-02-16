@@ -1,0 +1,46 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: healthbot
+  namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: api=ghcr.io/andreyrubtsov/bot-api,bot=ghcr.io/andreyrubtsov/bot-bot
+    argocd-image-updater.argoproj.io/api.helm.image-name: image.api.repository
+    argocd-image-updater.argoproj.io/api.helm.image-tag: image.api.tag
+    argocd-image-updater.argoproj.io/bot.helm.image-name: image.bot.repository
+    argocd-image-updater.argoproj.io/bot.helm.image-tag: image.bot.tag
+    argocd-image-updater.argoproj.io/api.update-strategy: newest-build
+    argocd-image-updater.argoproj.io/bot.update-strategy: newest-build
+    argocd-image-updater.argoproj.io/api.allow-tags: regexp:^[0-9a-f]{7,40}$
+    argocd-image-updater.argoproj.io/bot.allow-tags: regexp:^[0-9a-f]{7,40}$
+    argocd-image-updater.argoproj.io/write-back-method: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/AndreyRubtsov/bot.git
+      targetRevision: main
+      path: deploy/helm
+      helm:
+        releaseName: healthbot
+        valueFiles:
+          - $values/clusters/home-k3s/apps/healthbot/values-lan.yaml
+    - repoURL: https://github.com/AndreyRubtsov/healthbot-infra.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: healthbot
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - RespectIgnoreDifferences=true
+  ignoreDifferences:
+    - group: ""
+      kind: Secret
+      name: healthbot-healthbot-secrets
+      namespace: healthbot
+      jsonPointers:
+        - /data

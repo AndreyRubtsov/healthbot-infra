@@ -1,0 +1,31 @@
+image:
+  api:
+    repository: ghcr.io/andreyrubtsov/bot-api
+    tag: latest
+  bot:
+    repository: ghcr.io/andreyrubtsov/bot-bot
+    tag: latest
+
+api:
+  ingress:
+    enabled: true
+    className: traefik
+    hosts:
+      - host: healthbot.lan
+        paths:
+          - path: /
+            pathType: Prefix
+  env:
+    HEALTHBOT_PORTAL_ARGOCD_URL: http://argocd.lan
+    HEALTHBOT_PORTAL_AIRFLOW_URL: http://airflow.lan
+    HEALTHBOT_PORTAL_BOT_HEALTH_PATH: /bot/healthz
+
+bot:
+  health:
+    ingress:
+      enabled: true
+      path: /bot/healthz
+      pathType: Prefix
+
+secrets:
+  existingSecret: healthbot-healthbot-secrets

@@ -1,0 +1,15 @@
+configs:
+  params:
+    # Argo CD serves plain HTTP behind Traefik for local LAN access.
+    server.insecure: true
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    hostname: argocd.lan
+    path: /
+    pathType: Prefix
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: web
+      traefik.ingress.kubernetes.io/router.middlewares: argocd-argocd-local-only@kubernetescrd

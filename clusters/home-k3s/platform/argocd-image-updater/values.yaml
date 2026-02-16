@@ -1,0 +1,13 @@
+config:
+  applicationsAPIKind: kubernetes
+  logLevel: info
+  disableKubeEvents: true
+  registries:
+    - name: GHCR
+      prefix: ghcr.io
+      api_url: https://ghcr.io
+      ping: true
+      credentials: secret:argocd/argocd-image-updater-ghcr#creds
+extraArgs:
+  - --interval
+  - 2m
