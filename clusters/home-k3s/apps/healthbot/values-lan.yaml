@@ -15,6 +15,10 @@ api:
         paths:
           - path: /
             pathType: Prefix
+      - host: ""
+        paths:
+          - path: /
+            pathType: Prefix
   env:
     HEALTHBOT_PORTAL_ARGOCD_URL: http://argocd.lan
     HEALTHBOT_PORTAL_AIRFLOW_URL: http://airflow.lan
