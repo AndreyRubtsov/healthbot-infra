@@ -1,10 +1,10 @@
 image:
   api:
     repository: ghcr.io/andreyrubtsov/bot-api
-    tag: latest
+    tag: 763e6c3d8f8d2895c9bd9b2467b9ec42607a85b0
   bot:
     repository: ghcr.io/andreyrubtsov/bot-bot
-    tag: latest
+    tag: 763e6c3d8f8d2895c9bd9b2467b9ec42607a85b0
 
 api:
   ingress:
